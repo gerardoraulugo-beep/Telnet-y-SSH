@@ -1,0 +1,3929 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Telnet y SSH | Redes de Computadoras</title>
+
+<style>
+
+/* =========================================================
+   CONFIGURACIÓN GENERAL
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#050505;
+    color:white;
+    line-height:1.7;
+}
+
+/* =========================================================
+   BARRA DE NAVEGACIÓN
+========================================================= */
+
+nav{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:9999;
+
+    background:rgba(0,0,0,0.96);
+
+    border-bottom:2px solid #00eaff;
+
+    padding:14px;
+
+    text-align:center;
+
+    box-shadow:0 0 20px rgba(0,234,255,.3);
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+
+    margin:0 10px;
+
+    font-size:14px;
+    font-weight:bold;
+
+    transition:.3s;
+}
+
+nav a:hover{
+    color:#00eaff;
+    text-shadow:0 0 10px #00eaff;
+}
+
+/* =========================================================
+   PORTADA
+========================================================= */
+
+.hero{
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    padding:120px 20px 60px;
+
+    background:
+    radial-gradient(circle at center,#123942 0%,#071014 35%,#050505 75%);
+
+}
+
+.hero-contenido{
+    max-width:1100px;
+}
+
+.hero h1{
+
+    font-size:80px;
+
+    color:#00eaff;
+
+    text-shadow:
+    0 0 10px #00eaff,
+    0 0 30px #00eaff;
+
+    margin-bottom:15px;
+
+}
+
+.hero h2{
+    font-size:30px;
+    margin-bottom:25px;
+}
+
+.hero p{
+
+    max-width:850px;
+
+    margin:auto;
+
+    color:#ccc;
+
+    font-size:19px;
+
+}
+
+.badges{
+
+    margin-top:30px;
+}
+
+.badge{
+
+    display:inline-block;
+
+    border:1px solid #00eaff;
+
+    border-radius:30px;
+
+    padding:8px 18px;
+
+    margin:5px;
+
+    color:#00eaff;
+
+    background:#07171b;
+
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.boton{
+
+    display:inline-block;
+
+    margin-top:30px;
+
+    padding:14px 30px;
+
+    color:#00eaff;
+
+    border:2px solid #00eaff;
+
+    border-radius:30px;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.boton:hover{
+
+    background:#00eaff;
+
+    color:#000;
+
+    box-shadow:0 0 30px #00eaff;
+
+}
+
+/* =========================================================
+   SECCIONES
+========================================================= */
+
+section{
+
+    padding:100px 7%;
+
+}
+
+.contenedor{
+
+    max-width:1250px;
+
+    margin:auto;
+
+}
+
+.titulo{
+
+    text-align:center;
+
+    margin-bottom:50px;
+
+}
+
+.titulo h2{
+
+    color:#00eaff;
+
+    font-size:45px;
+
+    text-shadow:0 0 12px #00eaff;
+
+}
+
+.titulo p{
+
+    color:#999;
+
+    margin-top:10px;
+
+}
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(270px,1fr));
+
+    gap:25px;
+
+}
+
+.card{
+
+    background:#0d0d0d;
+
+    border:1px solid #303030;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    transition:.4s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:#00eaff;
+
+    box-shadow:
+    0 0 20px rgba(0,234,255,.2);
+
+}
+
+.card h3{
+
+    color:#00eaff;
+
+    margin-bottom:15px;
+
+}
+
+.card p{
+
+    color:#ddd;
+
+}
+
+/* =========================================================
+   INFORMACIÓN DESTACADA
+========================================================= */
+
+.info-box{
+
+    background:
+    linear-gradient(135deg,#071a1e,#0b0b0b);
+
+    border-left:5px solid #00eaff;
+
+    padding:25px;
+
+    border-radius:10px;
+
+    margin:30px 0;
+
+}
+
+/* =========================================================
+   TABLAS
+========================================================= */
+
+.table-container{
+
+    overflow-x:auto;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:30px;
+
+    background:#0c0c0c;
+
+}
+
+th,td{
+
+    border:1px solid #444;
+
+    padding:15px;
+
+    text-align:center;
+
+}
+
+th{
+
+    background:#00eaff;
+
+    color:#000;
+
+}
+
+tr:hover{
+
+    background:#151515;
+
+}
+
+/* =========================================================
+   CÓDIGO CISCO
+========================================================= */
+
+pre{
+
+    background:#020202;
+
+    border:1px solid #333;
+
+    border-left:4px solid #00eaff;
+
+    border-radius:10px;
+
+    padding:25px;
+
+    overflow-x:auto;
+
+    color:#00ff88;
+
+    margin:20px 0;
+
+}
+
+code{
+
+    font-family:Consolas,monospace;
+
+}
+
+/* =========================================================
+   PASOS
+========================================================= */
+
+.pasos{
+
+    counter-reset:paso;
+
+}
+
+.paso{
+
+    position:relative;
+
+    background:#0c0c0c;
+
+    border:1px solid #292929;
+
+    padding:25px 25px 25px 75px;
+
+    margin:20px 0;
+
+    border-radius:12px;
+
+}
+
+.paso:before{
+
+    counter-increment:paso;
+
+    content:counter(paso);
+
+    position:absolute;
+
+    left:20px;
+    top:20px;
+
+    width:35px;
+    height:35px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    background:#00eaff;
+
+    color:#000;
+
+    font-weight:bold;
+
+}
+
+/* =========================================================
+   PREGUNTAS INTERACTIVAS
+========================================================= */
+
+.faq{
+
+    background:#0d0d0d;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    margin:15px 0;
+
+    overflow:hidden;
+
+}
+
+.faq button{
+
+    width:100%;
+
+    padding:20px;
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+}
+
+.faq button:hover{
+
+    color:#00eaff;
+
+}
+
+.respuesta{
+
+    display:none;
+
+    padding:0 20px 20px;
+
+    color:#bbb;
+
+}
+
+/* =========================================================
+   BUSCADOR
+========================================================= */
+
+#buscador{
+
+    width:100%;
+
+    padding:17px;
+
+    border-radius:30px;
+
+    border:2px solid #333;
+
+    background:#101010;
+
+    color:white;
+
+    outline:none;
+
+    margin-bottom:30px;
+
+}
+
+#buscador:focus{
+
+    border-color:#00eaff;
+
+    box-shadow:0 0 15px #00eaff;
+
+}
+
+/* =========================================================
+   ENCUESTA
+========================================================= */
+
+.encuesta{
+
+    text-align:center;
+
+    background:
+    radial-gradient(circle,#092a31,#050505 70%);
+
+    border-top:2px solid #00eaff;
+
+    border-bottom:2px solid #00eaff;
+
+}
+
+.encuesta h2{
+
+    font-size:45px;
+
+    color:#00eaff;
+
+}
+
+/* =========================================================
+   BIBLIOGRAFÍA
+========================================================= */
+
+.bibliografia{
+
+    background:#090909;
+
+}
+
+.bibliografia a{
+
+    color:#00eaff;
+
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+
+    background:#000;
+
+    text-align:center;
+
+    padding:40px;
+
+    color:#777;
+
+    border-top:1px solid #333;
+
+}
+
+/* =========================================================
+   BOTÓN ARRIBA
+========================================================= */
+
+.arriba{
+
+    position:fixed;
+
+    right:20px;
+
+    bottom:20px;
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:50%;
+
+    background:#00eaff;
+
+    color:#000;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-decoration:none;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    box-shadow:0 0 20px #00eaff;
+
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:700px){
+
+    .hero h1{
+
+        font-size:45px;
+
+    }
+
+    .hero h2{
+
+        font-size:22px;
+
+    }
+
+    nav a{
+
+        font-size:11px;
+
+        margin:3px;
+
+    }
+
+    section{
+
+        padding:75px 5%;
+
+    }
+
+    .titulo h2{
+
+        font-size:32px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     MENÚ
+===================================================== -->
+
+<nav>
+
+<a href="#inicio">Inicio</a>
+
+<a href="#introduccion">Introducción</a>
+
+<a href="#telnet">Telnet</a>
+
+<a href="#ssh">SSH</a>
+
+<a href="#criptografia">Criptografía</a>
+
+<a href="#comparacion">Comparación</a>
+
+<a href="#cisco">Cisco</a>
+
+<a href="#packet">Packet Tracer</a>
+
+<a href="#seguridad">Seguridad</a>
+
+<a href="#faq">Preguntas</a>
+
+<a href="#bibliografia">Bibliografía</a>
+
+<a href="#encuesta">Encuesta</a>
+
+</nav>
+
+
+<!-- =====================================================
+     PORTADA
+===================================================== -->
+
+<header class="hero" id="inicio">
+
+<div class="hero-contenido">
+
+<h1>TELNET & SSH</h1>
+
+<h2>Administración remota de dispositivos de red</h2>
+
+<p>
+
+Proyecto educativo sobre los protocolos Telnet y SSH,
+su funcionamiento, características, seguridad,
+configuración en dispositivos Cisco, comandos,
+criptografía, ventajas, desventajas y diferencias.
+
+</p>
+
+<div class="badges">
+
+<span class="badge">TCP 23 - TELNET</span>
+
+<span class="badge">TCP 22 - SSH</span>
+
+<span class="badge">CISCO</span>
+
+<span class="badge">REDES</span>
+
+<span class="badge">SEGURIDAD</span>
+
+</div>
+
+<a class="boton" href="#introduccion">
+
+COMENZAR A ESTUDIAR
+
+</a>
+
+</div>
+
+</header>
+
+
+<!-- =====================================================
+     INFORMACIÓN DEL PROYECTO
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>Información del proyecto</h2>
+
+<p>Trabajo académico sobre Telnet y SSH</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Universidad</h3>
+
+<p>
+
+Universidad Politécnica del Estado de Guerrero
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Ingeniería</h3>
+
+<p>
+
+Ingeniería de la Tecnología de la Información
+e Innovación Digital
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Materia</h3>
+
+<p>
+
+Metodología No-code
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Profesor</h3>
+
+<p>
+
+Marco Antonio Valois Flores
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Alumnos</h3>
+
+<p>
+
+Gerardo Raul Lugo Martinez<br>
+Marcos Rodriguez Arroyo
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Fecha</h3>
+
+<p>
+
+17/09/2026
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     INTRODUCCIÓN
+===================================================== -->
+
+<section id="introduccion">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>1. Introducción</h2>
+
+<p>Acceso remoto en redes de computadoras</p>
+
+</div>
+
+<div class="info-box">
+
+<p>
+
+En las redes de computadoras es necesario administrar
+dispositivos como routers, switches y servidores.
+
+Una de las formas de hacerlo es mediante un acceso remoto.
+
+El acceso remoto permite que un administrador se conecte
+a un dispositivo desde otra computadora utilizando la red,
+sin tener que estar físicamente frente al equipo.
+
+Dos protocolos relacionados con esta tarea son Telnet y SSH.
+
+</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Telnet</h3>
+
+<p>
+
+Es un protocolo utilizado para acceder remotamente a
+un dispositivo mediante una conexión TCP.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>SSH</h3>
+
+<p>
+
+Secure Shell permite administrar dispositivos remotamente
+incorporando mecanismos criptográficos para proteger
+la comunicación.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     TELNET
+===================================================== -->
+
+<section id="telnet">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>2. ¿Qué es Telnet?</h2>
+
+<p>Telecommunication Network</p>
+
+</div>
+
+<div class="info-box">
+
+<p>
+
+Telnet es un protocolo de comunicación que permite
+establecer una sesión de terminal remota con otro
+dispositivo conectado a una red.
+
+Su especificación principal está definida en el
+RFC 854.
+
+Utiliza una conexión TCP para transportar los datos
+y la información de control.
+
+En términos sencillos, Telnet permite controlar un
+dispositivo de red desde otra computadora mediante
+comandos.
+
+</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Puerto</h3>
+
+<p>
+
+TCP 23
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Protocolo</h3>
+
+<p>
+
+TCP
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Interfaz</h3>
+
+<p>
+
+Línea de comandos
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Administración</h3>
+
+<p>
+
+Routers, switches y otros dispositivos.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CARACTERÍSTICAS TELNET
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>3. Características de Telnet</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Administración remota</h3>
+
+<p>
+
+Permite acceder a dispositivos desde otra computadora.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>TCP</h3>
+
+<p>
+
+Utiliza el protocolo de transporte TCP.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Puerto 23</h3>
+
+<p>
+
+Utiliza normalmente el puerto TCP 23.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>CLI</h3>
+
+<p>
+
+Permite trabajar mediante una interfaz de línea
+de comandos.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Equipos de red</h3>
+
+<p>
+
+Puede utilizarse para acceder a routers y switches.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Protocolo antiguo</h3>
+
+<p>
+
+Es un protocolo de acceso remoto tradicional.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Seguridad</h3>
+
+<p>
+
+No proporciona cifrado adecuado para proteger
+las credenciales y los datos de una sesión.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     FUNCIONAMIENTO TELNET
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>4. ¿Cómo funciona Telnet?</h2>
+
+</div>
+
+<div class="pasos">
+
+<div class="paso">
+
+<h3>El usuario inicia la conexión</h3>
+
+<p>
+
+Desde una computadora se solicita una conexión
+hacia la dirección IP del dispositivo.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Se establece la conexión TCP</h3>
+
+<p>
+
+El cliente Telnet establece una conexión con el
+dispositivo utilizando TCP.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Autenticación</h3>
+
+<p>
+
+Dependiendo de la configuración, el dispositivo
+puede solicitar usuario y contraseña.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Inicio de sesión</h3>
+
+<p>
+
+Si las credenciales son correctas, el usuario
+obtiene acceso a la línea de comandos.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Ejecución de comandos</h3>
+
+<p>
+
+Por ejemplo:
+
+</p>
+
+<pre><code>show running-config</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Finalizar conexión</h3>
+
+<p>
+
+El usuario puede cerrar la sesión cuando termina
+de administrar el dispositivo.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SEGURIDAD TELNET
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>5. Problemas de seguridad de Telnet</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Sin cifrado seguro</h3>
+
+<p>
+
+Telnet no proporciona la protección criptográfica
+que proporciona SSH.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Información sensible</h3>
+
+<p>
+
+En una red insegura, un atacante que consiga observar
+el tráfico podría obtener información sensible.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Sniffing</h3>
+
+<p>
+
+El tráfico puede ser observado mediante herramientas
+de captura de paquetes en determinados escenarios.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Man-in-the-Middle</h3>
+
+<p>
+
+La falta de mecanismos de protección del protocolo
+puede permitir determinados escenarios de ataque.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SSH
+===================================================== -->
+
+<section id="ssh">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>6. ¿Qué es SSH?</h2>
+
+<p>Secure Shell</p>
+
+</div>
+
+<div class="info-box">
+
+<p>
+
+SSH significa Secure Shell.
+
+Es un protocolo diseñado para proporcionar acceso
+remoto seguro a sistemas y dispositivos a través
+de una red.
+
+El estándar RFC 4253 describe SSH como un protocolo
+para inicio de sesión remoto seguro y otros servicios
+de red sobre redes que pueden considerarse inseguras.
+
+Proporciona cifrado, autenticación del servidor e
+integridad de la información.
+
+</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Puerto</h3>
+
+<p>
+
+TCP 22
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Cifrado</h3>
+
+<p>
+
+Protege la comunicación mediante criptografía.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Autenticación</h3>
+
+<p>
+
+Permite autenticar al usuario.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Integridad</h3>
+
+<p>
+
+Protege la integridad de los datos.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     HISTORIA SSH
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>7. Evolución de SSH</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>1995</h3>
+
+<p>
+
+SSH fue creado por Tatu Ylönen como una alternativa
+para proporcionar acceso remoto seguro.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>SSH-1</h3>
+
+<p>
+
+Fue la primera versión, pero actualmente se considera
+obsoleta debido a problemas estructurales de seguridad.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>SSH-2</h3>
+
+<p>
+
+Es la versión utilizada como estándar actual y cuenta
+con mejoras en el intercambio de claves y seguridad.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     FUNCIONAMIENTO SSH
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>8. ¿Cómo funciona SSH?</h2>
+
+</div>
+
+<div class="pasos">
+
+<div class="paso">
+
+<h3>Inicio de conexión</h3>
+
+<pre><code>ssh usuario@192.168.1.1</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Establecimiento de comunicación</h3>
+
+<p>
+
+El cliente SSH intenta establecer una conexión
+con el servidor SSH.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Intercambio criptográfico</h3>
+
+<p>
+
+SSH negocia mecanismos criptográficos para proteger
+posteriormente la comunicación.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Autenticación</h3>
+
+<p>
+
+El usuario proporciona sus credenciales.
+
+</p>
+
+<pre><code>
+Username: administrador
+Password: ********
+</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Sesión segura</h3>
+
+<p>
+
+Una vez autenticado, el usuario puede ejecutar
+comandos remotamente.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Cierre</h3>
+
+<p>
+
+Cuando termina la administración, se cierra
+la conexión.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CRIPTOGRAFÍA
+===================================================== -->
+
+<section id="criptografia">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>9. Criptografía utilizada en SSH</h2>
+
+<p>Protección de la comunicación</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Cifrado simétrico</h3>
+
+<p>
+
+Se utiliza para la transferencia de datos una vez
+establecida la sesión.
+
+Ejemplos mencionados en el material:
+
+<br><br>
+
+AES<br>
+ChaCha20
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Cifrado asimétrico</h3>
+
+<p>
+
+Se emplea durante el intercambio inicial de claves
+y determinados mecanismos de autenticación.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Clave pública</h3>
+
+<p>
+
+Puede almacenarse en el servidor y participar
+en mecanismos de autenticación.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Clave privada</h3>
+
+<p>
+
+Debe mantenerse confidencial en el cliente.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>HMAC</h3>
+
+<p>
+
+Los mecanismos basados en HMAC ayudan a garantizar
+la integridad de los mensajes.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Diffie-Hellman</h3>
+
+<p>
+
+Puede utilizarse durante el intercambio de claves
+para establecer una clave de sesión compartida.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CONEXIÓN SSH DETALLADA
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>10. Conexión SSH paso a paso</h2>
+
+</div>
+
+<div class="pasos">
+
+<div class="paso">
+
+<h3>Handshake TCP</h3>
+
+<p>
+
+El cliente se conecta al puerto 22 del servidor.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Verificación del host</h3>
+
+<p>
+
+El servidor envía información utilizada para
+identificarlo. El cliente puede verificar la
+huella digital registrada.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Intercambio de claves</h3>
+
+<p>
+
+Cliente y servidor pueden utilizar mecanismos como
+Diffie-Hellman para establecer una clave de sesión.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Autenticación</h3>
+
+<p>
+
+Puede utilizarse una contraseña o un mecanismo
+basado en claves públicas y privadas.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Apertura del canal</h3>
+
+<p>
+
+Se establece el canal protegido para ejecutar
+comandos, realizar túneles o transferir archivos.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     COMPARACIÓN
+===================================================== -->
+
+<section id="comparacion">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>11. Telnet vs SSH</h2>
+
+<p>Comparación completa</p>
+
+</div>
+
+<div class="table-container">
+
+<table>
+
+<tr>
+
+<th>Característica</th>
+
+<th>Telnet</th>
+
+<th>SSH</th>
+
+</tr>
+
+<tr>
+
+<td>Nombre</td>
+
+<td>Telnet</td>
+
+<td>Secure Shell</td>
+
+</tr>
+
+<tr>
+
+<td>Administración remota</td>
+
+<td>Sí</td>
+
+<td>Sí</td>
+
+</tr>
+
+<tr>
+
+<td>TCP</td>
+
+<td>Sí</td>
+
+<td>Sí</td>
+
+</tr>
+
+<tr>
+
+<td>Puerto</td>
+
+<td>23</td>
+
+<td>22</td>
+
+</tr>
+
+<tr>
+
+<td>Cifrado</td>
+
+<td>No proporciona cifrado seguro</td>
+
+<td>Sí</td>
+
+</tr>
+
+<tr>
+
+<td>Autenticación</td>
+
+<td>Según configuración</td>
+
+<td>Sí</td>
+
+</tr>
+
+<tr>
+
+<td>Integridad</td>
+
+<td>Sin las mismas protecciones criptográficas</td>
+
+<td>Sí</td>
+
+</tr>
+
+<tr>
+
+<td>Seguridad</td>
+
+<td>Menor</td>
+
+<td>Mayor</td>
+
+</tr>
+
+<tr>
+
+<td>Uso</td>
+
+<td>Educativo, pruebas y sistemas heredados</td>
+
+<td>Administración remota segura</td>
+
+</tr>
+
+<tr>
+
+<td>Transferencia de archivos</td>
+
+<td>No es su función principal</td>
+
+<td>SFTP / SCP</td>
+
+</tr>
+
+<tr>
+
+<td>Automatización</td>
+
+<td>Limitada</td>
+
+<td>Amplio uso en scripts y administración</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CONCEPTOS IMPORTANTES
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>12. Conceptos importantes</h2>
+
+</div>
+
+<input
+type="text"
+id="buscador"
+placeholder="🔎 Buscar un concepto..."
+onkeyup="buscarConcepto()"
+>
+
+<div id="conceptos" class="grid">
+
+<div class="card">
+
+<h3>Dirección IP</h3>
+
+<p>
+
+Identifica lógicamente a un dispositivo dentro
+de una red.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>TCP</h3>
+
+<p>
+
+Protocolo de transporte utilizado para establecer
+comunicaciones confiables.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Puerto</h3>
+
+<p>
+
+Número lógico utilizado para identificar
+determinados servicios.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Cliente</h3>
+
+<p>
+
+Equipo desde el cual se inicia una conexión.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Servidor</h3>
+
+<p>
+
+Equipo que recibe y atiende la conexión.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>CLI</h3>
+
+<p>
+
+Command Line Interface o interfaz de línea
+de comandos.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Autenticación</h3>
+
+<p>
+
+Proceso mediante el cual se verifica la identidad
+del usuario.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Cifrado</h3>
+
+<p>
+
+Proceso mediante el cual la información se transforma
+para impedir que personas no autorizadas puedan
+interpretarla fácilmente.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CISCO
+===================================================== -->
+
+<section id="cisco">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>13. Telnet y SSH en Cisco</h2>
+
+<p>Administración remota mediante líneas VTY</p>
+
+</div>
+
+<div class="info-box">
+
+<p>
+
+En Cisco, tanto Telnet como SSH pueden utilizarse
+para administrar remotamente un router o switch.
+
+El acceso remoto normalmente se configura mediante
+las líneas VTY, conocidas como Virtual Terminal Lines.
+
+</p>
+
+</div>
+
+<pre><code>
+line vty 0 4
+</code></pre>
+
+<p>
+
+Esta configuración entra a la configuración de
+las líneas VTY.
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     TELNET CISCO
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>14. Configuración básica de Telnet en Cisco</h2>
+
+</div>
+
+<pre><code>
+enable
+
+configure terminal
+
+hostname R1
+
+enable secret cisco
+
+line vty 0 4
+
+password telnet
+
+login
+
+transport input telnet
+
+end
+</code></pre>
+
+<div class="info-box">
+
+<p>
+
+Después, desde una computadora correctamente
+configurada, se puede intentar:
+
+</p>
+
+<pre><code>telnet 192.168.1.1</code></pre>
+
+<p>
+
+La dirección IP dependerá de la configuración
+del router.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SSH CISCO
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>15. Configuración básica de SSH en Cisco</h2>
+
+</div>
+
+<pre><code>
+enable
+
+configure terminal
+
+hostname R1
+
+ip domain-name redlocal.com
+
+username admin privilege 15 secret cisco123
+
+crypto key generate rsa
+
+line vty 0 4
+
+login local
+
+transport input ssh
+
+end
+</code></pre>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     HOSTNAME Y DOMINIO
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>16. Hostname y nombre de dominio</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Hostname</h3>
+
+<pre><code>hostname R1</code></pre>
+
+<p>
+
+Identifica el nombre del dispositivo.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Dominio</h3>
+
+<pre><code>ip domain-name redlocal.com</code></pre>
+
+<p>
+
+Forma parte de los parámetros utilizados para
+preparar el dispositivo para SSH y generar
+las claves criptográficas.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     USUARIO
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>17. Usuario y contraseña</h2>
+
+</div>
+
+<pre><code>
+username admin privilege 15 secret cisco123
+</code></pre>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>username</h3>
+
+<p>
+
+Crea el usuario.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>admin</h3>
+
+<p>
+
+Nombre del usuario.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>privilege 15</h3>
+
+<p>
+
+Asigna nivel de privilegio.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>secret</h3>
+
+<p>
+
+Configura una contraseña protegida.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     VTY
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>18. Líneas VTY</h2>
+
+</div>
+
+<pre><code>
+line vty 0 4
+
+login local
+
+transport input ssh
+</code></pre>
+
+<div class="info-box">
+
+<p>
+
+Las líneas VTY son líneas virtuales utilizadas
+para conexiones remotas.
+
+La instrucción:
+
+</p>
+
+<pre><code>transport input ssh</code></pre>
+
+<p>
+
+indica que se permite SSH como método de acceso
+entrante en esas líneas.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     RSA
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>19. ¿Qué es RSA?</h2>
+
+</div>
+
+<div class="info-box">
+
+<p>
+
+RSA es un sistema criptográfico utilizado en
+determinados escenarios para generar claves que
+participan en mecanismos de seguridad.
+
+En una configuración tradicional de SSH en Cisco
+puede aparecer:
+
+</p>
+
+<pre><code>
+crypto key generate rsa
+</code></pre>
+
+<p>
+
+El router genera las claves necesarias para preparar
+el servicio SSH.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     VERIFICACIÓN
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>20. Verificación de SSH</h2>
+
+</div>
+
+<pre><code>
+show ip ssh
+</code></pre>
+
+<p>
+
+Este comando permite revisar el estado de SSH
+en Cisco.
+
+</p>
+
+<br>
+
+<pre><code>
+show running-config
+</code></pre>
+
+<p>
+
+Permite revisar la configuración activa.
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CONEXIÓN DESDE PC
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>21. Conexión desde una computadora</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Telnet</h3>
+
+<pre><code>
+telnet 192.168.1.1
+</code></pre>
+
+</div>
+
+<div class="card">
+
+<h3>SSH</h3>
+
+<pre><code>
+ssh -l admin 192.168.1.1
+</code></pre>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     REQUISITOS
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>22. Requisitos para que funcione</h2>
+
+</div>
+
+<div class="pasos">
+
+<div class="paso">
+
+<h3>Tener conectividad</h3>
+
+<p>
+
+La PC debe poder comunicarse con el router.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Tener dirección IP</h3>
+
+<pre><code>
+PC:     192.168.1.10
+Router: 192.168.1.1
+</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Tener máscara adecuada</h3>
+
+<pre><code>
+255.255.255.0
+</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Configurar acceso remoto</h3>
+
+<p>
+
+Deben configurarse las líneas VTY.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Configurar autenticación</h3>
+
+<p>
+
+Debe existir una forma válida de autenticar
+al usuario.
+
+</p>
+
+</div>
+
+<div class="paso">
+
+<h3>Preparar SSH</h3>
+
+<p>
+
+Se deben configurar elementos necesarios como
+hostname, dominio y claves criptográficas.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PACKET TRACER
+===================================================== -->
+
+<section id="packet">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>23. Ejemplo completo para Packet Tracer</h2>
+
+<p>Topología educativa</p>
+
+</div>
+
+<div class="info-box">
+
+<h3>Topología</h3>
+
+<pre><code>
+
+PC
+ |
+ |
+Switch
+ |
+ |
+Router R1
+
+</code></pre>
+
+</div>
+
+<h3 style="color:#00eaff;">
+Configuración del router
+</h3>
+
+<pre><code>
+enable
+
+configure terminal
+
+hostname R1
+
+interface gigabitEthernet 0/0
+
+ip address 192.168.1.1 255.255.255.0
+
+no shutdown
+
+exit
+
+ip domain-name redlocal.com
+
+username admin privilege 15 secret cisco123
+
+crypto key generate rsa
+
+line vty 0 4
+
+login local
+
+transport input ssh
+
+end
+</code></pre>
+
+
+<h3 style="color:#00eaff;">
+Configuración de la PC
+</h3>
+
+<pre><code>
+IP:       192.168.1.10
+
+Mask:     255.255.255.0
+
+Gateway:  192.168.1.1
+</code></pre>
+
+
+<h3 style="color:#00eaff;">
+Comprobar conectividad
+</h3>
+
+<pre><code>
+ping 192.168.1.1
+</code></pre>
+
+
+<h3 style="color:#00eaff;">
+Conectarse por SSH
+</h3>
+
+<pre><code>
+ssh -l admin 192.168.1.1
+</code></pre>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SOLUCIÓN DE PROBLEMAS
+===================================================== -->
+
+<section id="seguridad">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>24. ¿Qué ocurre si el ping no funciona?</h2>
+
+</div>
+
+<div class="pasos">
+
+<div class="paso">
+
+<h3>Comprobar dirección IP</h3>
+
+<pre><code>
+show ip interface brief
+</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Comprobar interfaz</h3>
+
+<p>
+
+Debe aparecer algo similar a:
+
+</p>
+
+<pre><code>
+GigabitEthernet0/0
+192.168.1.1
+up
+up
+</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Comprobar configuración</h3>
+
+<pre><code>
+show running-config
+</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Comprobar conectividad</h3>
+
+<pre><code>
+ping 192.168.1.1
+</code></pre>
+
+</div>
+
+<div class="paso">
+
+<h3>Comprobar SSH</h3>
+
+<pre><code>
+show ip ssh
+</code></pre>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     VENTAJAS
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>25. Ventajas de Telnet</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Sencillo</h3>
+
+<p>
+
+Es sencillo de configurar.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Fácil utilización</h3>
+
+<p>
+
+Es fácil de utilizar en entornos de aprendizaje.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Acceso remoto</h3>
+
+<p>
+
+Permite administrar dispositivos remotamente.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Aprendizaje</h3>
+
+<p>
+
+Ayuda a comprender los principios del acceso remoto.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     DESVENTAJAS TELNET
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>26. Desventajas de Telnet</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Sin cifrado</h3>
+
+<p>
+
+No proporciona cifrado de la sesión.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Exposición</h3>
+
+<p>
+
+Las credenciales y datos no reciben la protección
+criptográfica de SSH.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Redes no confiables</h3>
+
+<p>
+
+No es adecuado para administración remota segura
+sobre redes que no son confiables.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     VENTAJAS SSH
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>27. Ventajas de SSH</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Comunicación cifrada</h3>
+
+<p>
+
+Protege la comunicación mediante criptografía.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Autenticación</h3>
+
+<p>
+
+Permite mecanismos de autenticación.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Integridad</h3>
+
+<p>
+
+Protege la integridad de los datos.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Administración remota</h3>
+
+<p>
+
+Permite administrar dispositivos mediante redes
+que no se consideran completamente confiables.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     DESVENTAJAS SSH
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>28. Desventajas de SSH</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Configuración</h3>
+
+<p>
+
+Puede requerir una mayor configuración inicial.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Claves</h3>
+
+<p>
+
+Puede requerir generación y administración de claves.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Usuarios</h3>
+
+<p>
+
+Requiere configuración de usuarios y métodos
+de autenticación.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Conocimientos</h3>
+
+<p>
+
+Requiere conocimientos adicionales de seguridad
+de redes.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     EJEMPLO SENCILLO
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>29. Ejemplo sencillo</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Con Telnet</h3>
+
+<pre><code>
+
+Computadora
+
+      |
+      |
+      | contraseña / datos
+      |
+      v
+
+Router
+
+</code></pre>
+
+<p>
+
+La comunicación no cuenta con el mismo nivel
+de protección criptográfica de SSH.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Con SSH</h3>
+
+<pre><code>
+
+Computadora
+
+      |
+      |
+      | comunicación protegida
+      |
+      v
+
+Router
+
+</code></pre>
+
+<p>
+
+SSH utiliza mecanismos criptográficos para
+proteger la comunicación.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PUERTOS
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>30. Puertos utilizados</h2>
+
+</div>
+
+<div class="table-container">
+
+<table>
+
+<tr>
+
+<th>Protocolo</th>
+
+<th>Puerto</th>
+
+<th>Transporte</th>
+
+</tr>
+
+<tr>
+
+<td>Telnet</td>
+
+<td>23</td>
+
+<td>TCP</td>
+
+</tr>
+
+<tr>
+
+<td>SSH</td>
+
+<td>22</td>
+
+<td>TCP</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     IMPORTANCIA
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>31. Importancia de Telnet y SSH</h2>
+
+</div>
+
+<div class="info-box">
+
+<p>
+
+Estos protocolos son importantes porque permiten
+comprender cómo se realiza la administración remota
+de dispositivos.
+
+En un laboratorio de redes, por ejemplo, un administrador
+puede configurar un router sin estar conectado físicamente
+al puerto de consola.
+
+SSH permite realizar esta administración utilizando
+mecanismos de protección criptográfica.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     USOS SSH
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>32. Usos de SSH</h2>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Administración remota</h3>
+
+<p>
+
+Administración segura de servidores y dispositivos.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>SFTP</h3>
+
+<p>
+
+Transferencia segura de archivos.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>SCP</h3>
+
+<p>
+
+Transferencia de archivos mediante el protocolo SSH.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Automatización</h3>
+
+<p>
+
+Puede utilizarse en procesos automatizados y scripts.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Túneles</h3>
+
+<p>
+
+SSH permite utilizar mecanismos de tunelización
+y reenvío de puertos.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     COMPARACIÓN IA
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>33. Comparación de las IAs utilizadas</h2>
+
+<p>Información incluida en el documento original</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>ChatGPT</h3>
+
+<p>
+
+En el documento se indica que fue utilizada como
+la IA que abordó mayor cantidad de información,
+incluyendo ejemplos y prácticas con comandos.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Gemini</h3>
+
+<p>
+
+En el documento se menciona que proporcionó menos
+información que ChatGPT, pero incluyó imágenes
+explicativas que facilitaron el entendimiento.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Copilot</h3>
+
+<p>
+
+El documento señala que proporcionó menor cantidad
+de información y no incluyó ejemplos o imágenes
+en la respuesta analizada.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     RESUMEN PARA EXPOSICIÓN
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>34. Resumen para exposición</h2>
+
+</div>
+
+<div class="info-box">
+
+<p>
+
+Telnet es un protocolo que permite conectarse
+remotamente a un dispositivo mediante una conexión TCP.
+Utiliza normalmente el puerto 23 y permite administrar
+equipos mediante comandos, pero no proporciona cifrado
+seguro para la sesión.
+
+<br><br>
+
+SSH, que significa Secure Shell, también permite
+administrar dispositivos remotamente, pero utiliza
+mecanismos criptográficos para proteger la comunicación.
+
+<br><br>
+
+SSH utiliza normalmente el puerto 22 y proporciona
+cifrado, autenticación e integridad.
+
+<br><br>
+
+En Cisco, ambos pueden utilizarse mediante las
+líneas VTY, aunque SSH se utiliza para administración
+remota segura.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CONCLUSIÓN
+===================================================== -->
+
+<section>
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>35. Conclusión</h2>
+
+</div>
+
+<div class="info-box">
+
+<p>
+
+Telnet y SSH son protocolos utilizados para el acceso
+remoto a dispositivos y sistemas.
+
+<br><br>
+
+Telnet fue diseñado para proporcionar comunicación
+remota mediante terminales y utiliza TCP. Sin embargo,
+no ofrece las protecciones criptográficas necesarias
+para considerar segura una sesión sobre una red
+no confiable.
+
+<br><br>
+
+SSH fue desarrollado para proporcionar acceso remoto
+seguro. Su diseño incorpora mecanismos de cifrado,
+autenticación e integridad de los datos.
+
+<br><br>
+
+Por ello, en el aprendizaje de redes es importante
+conocer ambos protocolos: Telnet permite comprender
+el acceso remoto tradicional, mientras que SSH permite
+estudiar cómo se protege ese acceso mediante
+mecanismos criptográficos.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PREGUNTAS FRECUENTES
+===================================================== -->
+
+<section id="faq">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>36. Preguntas frecuentes</h2>
+
+<p>Haz clic en una pregunta para mostrar la respuesta</p>
+
+</div>
+
+
+<div class="faq">
+
+<button onclick="respuesta(1)">
+
+¿Qué es Telnet?
+
+</button>
+
+<div class="respuesta" id="r1">
+
+Es un protocolo que permite establecer una sesión
+de terminal remota utilizando TCP.
+
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<button onclick="respuesta(2)">
+
+¿Qué significa SSH?
+
+</button>
+
+<div class="respuesta" id="r2">
+
+Significa Secure Shell.
+
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<button onclick="respuesta(3)">
+
+¿Qué puerto utiliza Telnet?
+
+</button>
+
+<div class="respuesta" id="r3">
+
+TCP 23.
+
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<button onclick="respuesta(4)">
+
+¿Qué puerto utiliza SSH?
+
+</button>
+
+<div class="respuesta" id="r4">
+
+TCP 22.
+
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<button onclick="respuesta(5)">
+
+¿Qué son las líneas VTY?
+
+</button>
+
+<div class="respuesta" id="r5">
+
+Son líneas virtuales utilizadas para permitir
+conexiones remotas en dispositivos Cisco.
+
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<button onclick="respuesta(6)">
+
+¿Qué comando muestra el estado de SSH?
+
+</button>
+
+<div class="respuesta" id="r6">
+
+show ip ssh
+
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<button onclick="respuesta(7)">
+
+¿Qué comando muestra la configuración activa?
+
+</button>
+
+<div class="respuesta" id="r7">
+
+show running-config
+
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<button onclick="respuesta(8)">
+
+¿Cuál utiliza mecanismos criptográficos?
+
+</button>
+
+<div class="respuesta" id="r8">
+
+SSH incorpora mecanismos criptográficos para
+proteger la comunicación.
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     BIBLIOGRAFÍA
+===================================================== -->
+
+<section class="bibliografia" id="bibliografia">
+
+<div class="contenedor">
+
+<div class="titulo">
+
+<h2>37. Bibliografía</h2>
+
+<p>Fuentes mencionadas en el documento</p>
+
+</div>
+
+<div class="card">
+
+<h3>RFC 854 - Telnet Protocol Specification</h3>
+
+<p>
+
+Postel, J. & Reynolds, J. RFC 854.
+Telnet Protocol Specification.
+RFC Editor / IETF, mayo de 1983.
+
+</p>
+
+<br>
+
+<a
+href="https://datatracker.ietf.org/doc/html/rfc854"
+target="_blank">
+
+Consultar RFC 854
+
+</a>
+
+</div>
+
+
+<div class="card">
+
+<h3>RFC 4251 - SSH Protocol Architecture</h3>
+
+<p>
+
+Ylonen, T. & Lonvick, C. RFC 4251.
+The Secure Shell (SSH) Protocol Architecture.
+IETF.
+
+</p>
+
+<br>
+
+<a
+href="https://datatracker.ietf.org/doc/html/rfc4251"
+target="_blank">
+
+Consultar RFC 4251
+
+</a>
+
+</div>
+
+
+<div class="card">
+
+<h3>RFC 4253 - SSH Transport Layer Protocol</h3>
+
+<p>
+
+Ylonen, T. & Lonvick, C.
+The Secure Shell (SSH) Transport Layer Protocol.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Cisco Systems</h3>
+
+<p>
+
+Documentación oficial de Cisco relacionada con
+la configuración y administración de SSH,
+Telnet y acceso mediante líneas de terminal.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Redes de Computadoras</h3>
+
+<p>
+
+Tanenbaum, A. S. & Wetherall, D. J.
+Redes de Computadoras. 5.ª edición.
+Pearson Educación.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Cryptography and Network Security</h3>
+
+<p>
+
+Stallings, W.
+Cryptography and Network Security:
+Principles and Practice. 7.ª edición.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Otras fuentes mencionadas</h3>
+
+<p>
+
+Wikipedia – Telnet<br>
+PhoenixNAP – ¿Qué es Telnet?<br>
+TecnoDigital – Qué es Telnet<br>
+Encryption Consulting – ¿Qué es Secure Shell?<br>
+Piensa Solutions – ¿Qué es SSH y cómo funciona?<br>
+SiteGround – ¿Qué es SSH y cómo lo uso?
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ENCUESTA
+===================================================== -->
+
+<section class="encuesta" id="encuesta">
+
+<div class="contenedor">
+
+<h2>📝 Encuesta sobre Telnet y SSH</h2>
+
+<p>
+
+Has llegado al final del proyecto.
+
+Ahora puedes responder una encuesta
+sobre los conocimientos adquiridos
+acerca de Telnet y SSH.
+
+</p>
+
+<!-- =====================================================
+     CAMBIA EL ENLACE DE ABAJO POR TU GOOGLE FORMS
+===================================================== -->
+
+<a
+
+class="boton"
+
+href="https://docs.google.com/forms/"
+
+target="_blank">
+
+ABRIR ENCUESTA DE GOOGLE
+
+</a>
+
+<p style="margin-top:25px;color:#888;">
+
+La encuesta se abrirá en una nueva pestaña.
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+<p>
+
+TELNET & SSH
+
+</p>
+
+<p>
+
+Proyecto educativo de Redes de Computadoras
+
+</p>
+
+<p>
+
+Gerardo Raul Lugo Martinez
+
+</p>
+
+<p>
+
+© 2026
+
+</p>
+
+</footer>
+
+
+<!-- =====================================================
+     BOTÓN ARRIBA
+===================================================== -->
+
+<a href="#inicio" class="arriba">
+
+↑
+
+</a>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+/* =====================================================
+   PREGUNTAS FRECUENTES
+===================================================== */
+
+function respuesta(numero){
+
+    let elemento =
+    document.getElementById("r"+numero);
+
+    if(elemento.style.display === "block"){
+
+        elemento.style.display="none";
+
+    }else{
+
+        elemento.style.display="block";
+
+    }
+
+}
+
+
+/* =====================================================
+   BUSCADOR DE CONCEPTOS
+===================================================== */
+
+function buscarConcepto(){
+
+    let texto =
+    document.getElementById("buscador")
+    .value
+    .toLowerCase();
+
+    let tarjetas =
+    document.querySelectorAll("#conceptos .card");
+
+    tarjetas.forEach(function(tarjeta){
+
+        let contenido =
+        tarjeta.innerText.toLowerCase();
+
+        if(contenido.includes(texto)){
+
+            tarjeta.style.display="block";
+
+        }else{
+
+            tarjeta.style.display="none";
+
+        }
+
+    });
+
+}
+
+</script>
+
+
+</body>
+
+</html>
